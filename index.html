@@ -3,264 +3,361 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Brief für Fio Fiona Sternchen Gheri</title>
+<title>Brief für Fiona</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-
 :root{
- --bg:#0b0c0f;
- --paper:#efe4c8;
- --paper-dark:#e1d2ad;
- --ink:#1a1a1a;
- --wax:#6e1b1b;
- --env:#9c7a4d;
- --env-dark:#6f5434;
+  --bg0:#0b0c0f;
+  --bg1:#1a1d24;
+
+  --env0:#b18a57;
+  --env1:#8a673e;
+  --env2:#6a4f30;
+
+  --paper0:#f2e6c8;
+  --paper1:#e4d2ad;
+
+  --ink:#161616;
+
+  --wax0:#8f2c2c;
+  --wax1:#5f1616;
+
+  --shadow: rgba(0,0,0,.55);
+  --soft: rgba(0,0,0,.22);
+  --rim: rgba(255,255,255,.10);
 }
 
+*{box-sizing:border-box}
+
 body{
- margin:0;
- min-height:100vh;
- display:grid;
- place-items:center;
- background: radial-gradient(circle at 50% 30%, #1a1d24 0%, #0b0c0f 70%);
- font-family:"EB Garamond", serif;
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(900px 520px at 50% 32%, var(--bg1) 0%, var(--bg0) 72%);
+  color:#e9eef8;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
 
 .wrap{
- width:min(620px,94vw);
- text-align:center;
- color:#eee;
+  width:min(640px,94vw);
+  text-align:center;
 }
 
 .hint{
- opacity:.7;
- font-size:14px;
- margin-bottom:12px;
- letter-spacing:.05em;
+  margin:0 0 14px;
+  opacity:.75;
+  letter-spacing:.04em;
+  font-size:14px;
 }
 
 .stage{
- height:380px;
- display:grid;
- place-items:center;
+  height:420px;
+  display:grid;
+  place-items:center;
 }
 
+/* ---------- ENVELOPE ---------- */
 .envelope{
- position:relative;
- width:420px;
- height:270px;
- cursor:pointer;
- filter:drop-shadow(0 25px 35px rgba(0,0,0,.6));
+  --w: 420px;
+  --h: 270px;
+  width:var(--w);
+  height:var(--h);
+  position:relative;
+  cursor:pointer;
+  user-select:none;
+  transform: translateZ(0);
+  filter: drop-shadow(0 26px 34px var(--shadow));
+  outline:none;
 }
 
+@media (max-width:480px){
+  .envelope{ --w: 320px; --h: 210px; }
+  .stage{ height:380px; }
+}
+
+/* Outer body with cardboard grain */
 .env-body{
- position:absolute;
- inset:0;
- border-radius:14px;
- background:
- linear-gradient(160deg,var(--env),var(--env-dark)),
- repeating-linear-gradient(
-  45deg,
-  rgba(0,0,0,.06) 0px,
-  rgba(0,0,0,.06) 2px,
-  transparent 2px,
-  transparent 6px
- );
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  background:
+    linear-gradient(165deg, var(--env0), var(--env1) 55%, var(--env2)),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,.07) 0px,
+      rgba(0,0,0,.07) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+  overflow:hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.16),
+    inset 0 18px 24px rgba(255,255,255,.06),
+    inset 0 -18px 26px rgba(0,0,0,.18);
 }
 
-.flap-top{
- position:absolute;
- left:0; right:0; top:0;
- height:66%;
- background:linear-gradient(180deg,#b69260,var(--env));
- clip-path:polygon(0 0,50% 70%,100% 0,100% 100%,0 100%);
- transform-origin:top;
- transition:.4s cubic-bezier(.2,.85,.2,1);
- border-radius:14px 14px 0 0;
+/* Inner rim/edge */
+.env-body::after{
+  content:"";
+  position:absolute;
+  inset:10px;
+  border-radius:12px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.10);
+  opacity:.9;
+  pointer-events:none;
 }
 
+/* Side flaps (adds realism) */
+.flap-left,.flap-right{
+  position:absolute;
+  top:26%;
+  width:62%;
+  height:86%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.10)),
+    linear-gradient(180deg, var(--env1), var(--env2));
+  opacity:.98;
+  pointer-events:none;
+  filter: saturate(.98);
+}
+.flap-left{
+  left:-10%;
+  clip-path:polygon(0 0, 100% 50%, 0 100%);
+  box-shadow: inset -14px 0 18px rgba(0,0,0,.14);
+}
+.flap-right{
+  right:-10%;
+  clip-path:polygon(100% 0, 0 50%, 100% 100%);
+  box-shadow: inset 14px 0 18px rgba(0,0,0,.14);
+}
+
+/* Bottom flap */
 .flap-bottom{
- position:absolute;
- left:0; right:0; bottom:0;
- height:62%;
- background:linear-gradient(180deg,var(--env),var(--env-dark));
- clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:64%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.12)),
+    linear-gradient(180deg, var(--env1), var(--env2));
+  clip-path:polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+  border-bottom-left-radius:16px;
+  border-bottom-right-radius:16px;
+  box-shadow: inset 0 18px 22px rgba(0,0,0,.12);
+  pointer-events:none;
 }
 
+/* Top flap with 3D fold */
+.flap-top{
+  position:absolute;
+  left:0; right:0; top:0;
+  height:68%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.08)),
+    linear-gradient(180deg, #caa16a, var(--env1));
+  clip-path:polygon(0 0, 50% 70%, 100% 0, 100% 100%, 0 100%);
+  transform-origin:top;
+  transform: rotateX(0deg);
+  transition: transform 360ms cubic-bezier(.2,.85,.15,1);
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+  box-shadow:
+    inset 0 -18px 22px rgba(0,0,0,.16),
+    0 2px 0 var(--rim);
+  will-change:transform;
+  pointer-events:none;
+}
+
+/* Wax seal */
 .seal{
- position:absolute;
- left:50%;
- top:58%;
- transform:translate(-50%,-50%);
- width:64px;
- height:64px;
- border-radius:50%;
- background:
- radial-gradient(circle at 35% 30%, rgba(255,255,255,.2), transparent 60%),
- linear-gradient(180deg,#8c2a2a,var(--wax));
- box-shadow:
- inset 0 3px 6px rgba(0,0,0,.4),
- 0 8px 18px rgba(0,0,0,.6);
- display:grid;
- place-items:center;
- color:#f5e6d0;
- font-family:Cinzel, serif;
- font-weight:700;
+  position:absolute;
+  left:50%;
+  top:59%;
+  transform:translate(-50%,-50%);
+  width:64px;
+  height:64px;
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.18), transparent 62%),
+    radial-gradient(circle at 72% 80%, rgba(0,0,0,.26), transparent 60%),
+    linear-gradient(180deg, var(--wax0), var(--wax1));
+  box-shadow:
+    inset 0 3px 8px rgba(0,0,0,.35),
+    0 10px 18px rgba(0,0,0,.45);
+  display:grid;
+  place-items:center;
+  font-family:"Cinzel", serif;
+  font-weight:900;
+  letter-spacing:.06em;
+  color:#f5e6d0;
+  z-index:6;
+  transition: opacity 160ms ease, transform 160ms ease;
+  pointer-events:none;
 }
 
+/* ---------- LETTER ---------- */
 .letter{
- position:absolute;
- left:7%;
- right:7%;
- bottom:8%;
- height:90%;
- border-radius:6px;
- background:
- radial-gradient(circle at 20% 30%, rgba(255,255,255,.3), transparent 60%),
- linear-gradient(var(--paper),var(--paper-dark));
- box-shadow:
- inset 0 0 40px rgba(0,0,0,.15),
- 0 20px 35px rgba(0,0,0,.5);
- transform:translateY(60%);
- transition:.45s cubic-bezier(.2,.9,.1,1);
- display:flex;
- flex-direction:column;
- overflow:hidden;
+  position:absolute;
+  left:7.5%;
+  right:7.5%;
+  bottom:9%;
+  height:90%;
+  border-radius:12px;
+  background:
+    radial-gradient(700px 240px at 25% 25%, rgba(255,255,255,.20), transparent 55%),
+    radial-gradient(520px 260px at 80% 20%, rgba(0,0,0,.08), transparent 58%),
+    linear-gradient(180deg, var(--paper0), var(--paper1));
+  box-shadow:
+    0 18px 30px rgba(0,0,0,.35),
+    inset 0 0 0 1px rgba(0,0,0,.10),
+    inset 0 18px 30px rgba(255,255,255,.08),
+    inset 0 -20px 28px rgba(0,0,0,.10);
+  transform: translateY(58%);
+  transition: transform 420ms cubic-bezier(.2,.9,.1,1);
+  overflow:hidden;
+  z-index:4;
 }
 
+/* Paper edge wear */
 .letter::before{
- content:"";
- position:absolute;
- inset:0;
- pointer-events:none;
- background:
- radial-gradient(circle at 50% 50%, transparent 65%, rgba(0,0,0,.25));
- mix-blend-mode:multiply;
+  content:"";
+  position:absolute;
+  inset:-10px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(0,0,0,.14), transparent 48%),
+    radial-gradient(circle at 86% 22%, rgba(0,0,0,.12), transparent 52%),
+    radial-gradient(circle at 24% 88%, rgba(0,0,0,.12), transparent 52%),
+    radial-gradient(circle at 86% 86%, rgba(0,0,0,.14), transparent 50%),
+    repeating-linear-gradient( 35deg, rgba(0,0,0,.05) 0px, rgba(0,0,0,.05) 1px, transparent 1px, transparent 7px);
+  opacity:.55;
+  mix-blend-mode:multiply;
+  pointer-events:none;
 }
 
-header{
- font-family:Cinzel, serif;
- padding:18px 20px 6px;
- font-size:13px;
- letter-spacing:.12em;
- text-transform:uppercase;
- opacity:.75;
+.letter header{
+  padding:16px 18px 6px;
+  font-family:"Cinzel", serif;
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.70;
+  color:rgba(22,22,22,.85);
+  position:relative;
+  z-index:2;
 }
 
 .content{
- padding:0 22px 18px;
- font-size:17px;
- line-height:1.55;
- color:var(--ink);
- opacity:0;
- transform:translateY(10px);
- transition:.3s ease;
-}
-
-.main-text{
- font-family:"EB Garamond", serif;
- font-size:20px;
+  padding:0 18px 18px;
+  font-family:"EB Garamond", serif;
+  font-size:19px;
+  line-height:1.55;
+  color:var(--ink);
+  opacity:0;
+  transform: translateY(10px);
+  transition: opacity 220ms ease, transform 220ms ease;
+  position:relative;
+  z-index:2;
 }
 
 .sig{
- margin-top:auto;
- padding:10px 22px 20px;
- font-family:Cinzel, serif;
- font-size:14px;
- opacity:.8;
+  margin-top:auto;
+  padding:10px 18px 18px;
+  font-family:"Cinzel", serif;
+  font-size:13px;
+  letter-spacing:.04em;
+  opacity:.78;
+  color:rgba(22,22,22,.82);
+  position:relative;
+  z-index:2;
 }
 
-.envelope.is-open .flap-top{ transform:rotateX(170deg); }
-.envelope.is-open .letter{ transform:translateY(-12%); }
+/* ---------- OPEN STATE ---------- */
+.envelope.is-open .flap-top{
+  transform: rotateX(168deg);
+}
+.envelope.is-open .letter{
+  transform: translateY(-12%);
+}
 .envelope.is-open .content{
- opacity:1;
- transform:translateY(0);
- transition-delay:.15s;
+  opacity:1;
+  transform: translateY(0);
+  transition-delay: 120ms;
 }
 .envelope.is-open .seal{
- opacity:0;
- transform:translate(-50%,-50%) scale(.8);
- transition:.2s;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.86);
 }
 
+/* focus */
+.envelope:focus-visible{
+  outline:3px solid rgba(255,255,255,.60);
+  outline-offset:8px;
+  border-radius:18px;
+}
 </style>
 </head>
 
 <body>
-
 <div class="wrap">
-<p class="hint">Klick aufs Kuvert.</p>
+  <p class="hint">Klick aufs Kuvert.</p>
 
-<div class="stage">
-<div class="envelope" id="env" tabindex="0">
+  <div class="stage">
+    <div class="envelope" id="env" role="button" tabindex="0" aria-expanded="false" aria-label="Kuvert öffnen">
+      <div class="letter" aria-hidden="true">
+        <header>Persönlich</header>
 
-<div class="letter">
+        <div class="content">
+          <p>
+            Fiona,<br><br>
+            ich bin von ganzem Herzen froh, dass du in mein Leben getreten bist.
+            Du bist ein wundervoller Mensch, mit spannenden Höhen und auch Tiefen.
+            Ich liebe es, mit dir über alles reden zu können, das schätze ich sehr.
+            Und dann siehst du auch noch phänomenal aus.
+            Und die Nähe mit dir ist unglaublich intensiv – und dabei haben wir erst begonnen,
+            uns so richtig kennenzulernen. Erotisch, aber auch romantisch.<br><br>
+            Ich hoffe, dass wir einander noch lange in unseren Leben haben werden,
+            vielleicht wird ja sogar ein gemeinsames daraus.
+            Bleib so wie du bist, du bist wunderbar.
+            Ich vermisse deine physische Gegenwart schon und freue mich,
+            wenn wir uns wiedersehen.<br><br>
+            Dein Michael
+          </p>
+        </div>
 
-<header>Persönlich</header>
+        <div class="sig">– Michael</div>
+      </div>
 
-<div class="content">
-
-<p class="main-text">
-Fiona,<br><br>
-
-ich bin von ganzem Herzen froh, dass du in mein Leben getreten bist.  
-Du bist ein wundervoller Mensch, mit spannenden Höhen und auch Tiefen.  
-
-Ich liebe es, mit dir über alles reden zu können. Das schätze ich sehr.  
-
-Und dann siehst du auch noch phänomenal aus.  
-Und die Nähe mit dir ist unglaublich intensiv –  
-und dabei haben wir erst begonnen, uns so richtig kennenzulernen.  
-Erotisch, aber auch romantisch.  
-
-<br><br>
-
-Ich hoffe, dass wir einander noch lange in unseren Leben haben werden.  
-Vielleicht wird ja sogar ein gemeinsames daraus.  
-
-Bleib so wie du bist. Du bist wunderbar.  
-
-Ich vermisse deine physische Gegenwart  
-und freue mich jetzt schon, wenn wir uns wiedersehen.  
-
-<br><br>
-
-Dein Michael
-</p>
-
-</div>
-
-<div class="sig">– Michael</div>
-
-</div>
-
-<div class="env-body"></div>
-<div class="flap-bottom"></div>
-<div class="seal">MF</div>
-<div class="flap-top"></div>
-
-</div>
-</div>
+      <div class="env-body"></div>
+      <div class="flap-left"></div>
+      <div class="flap-right"></div>
+      <div class="flap-bottom"></div>
+      <div class="seal" aria-hidden="true">MF</div>
+      <div class="flap-top"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-const env = document.getElementById('env');
+  const env = document.getElementById('env');
 
-function toggle(){
- const open = env.classList.toggle('is-open');
- env.setAttribute('aria-expanded', open);
-}
+  function toggleEnvelope(){
+    const open = env.classList.toggle('is-open');
+    env.setAttribute('aria-expanded', String(open));
+    env.querySelector('.letter').setAttribute('aria-hidden', String(!open));
+  }
 
-env.addEventListener('click', toggle);
-env.addEventListener('keydown', e=>{
- if(e.key==="Enter" || e.key===" "){
-  e.preventDefault();
-  toggle();
- }
-});
+  env.addEventListener('click', toggleEnvelope);
+  env.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      toggleEnvelope();
+    }
+  });
 </script>
-
 </body>
 </html>
