@@ -12,23 +12,16 @@
   <style>
     :root{
       --bg:#06070a;
-
-      /* vintage beige envelope tones from reference */
       --env:#d8b892;
       --env2:#c4a575;
       --envFlap:#e8c9a3;
       --envShadow:#8b7352;
       --envLine: rgba(0,0,0,.12);
-
-      /* aged paper */
       --paper:#f8f3eb;
       --paper2:#e8ddc5;
       --ink:#2a2520;
-
-      /* deep red wax */
       --wax:#a83232;
       --wax2:#6a1515;
-
       --radius: 8px;
     }
 
@@ -50,38 +43,56 @@
     .hearts{
       position:fixed; inset:0;
       pointer-events:none;
-      z-index:100;
+      z-index:1;
       opacity:0;
       transition: opacity 800ms ease 400ms;
     }
     .hearts.active{
       opacity:.45;
     }
+    
+    /* hearts that float above letter */
+    .hearts-above{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:100;
+      opacity:0;
+      transition: opacity 800ms ease 400ms;
+    }
+    .hearts-above.active{
+      opacity:.45;
+    }
     .heart{
       position:absolute;
-      width:16px; height:16px;
-      transform:rotate(45deg);
-      background: rgba(235, 65, 80, .80);
-      border-radius:4px;
+      width:20px; 
+      height:20px;
       animation: floatUp linear infinite;
-      will-change: transform, top, left, opacity;
-      filter: blur(.0px);
+      will-change: transform, opacity;
     }
     .heart:before,.heart:after{
       content:"";
       position:absolute;
-      width:16px; height:16px;
+      width:20px; 
+      height:30px;
       background: rgba(235, 65, 80, .80);
-      border-radius:50%;
+      border-radius:20px 20px 0 0;
     }
-    .heart:before{ left:-8px; top:0; }
-    .heart:after{ left:0; top:-8px; }
+    .heart:before{ 
+      left:9px;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+    .heart:after{ 
+      left:1px;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
 
     @keyframes floatUp{
-      0%   { transform:translateY(120vh) rotate(45deg); opacity:0; }
+      0%   { transform:translateY(0); opacity:0; }
       8%   { opacity:.70; }
       88%  { opacity:.70; }
-      100% { transform:translateY(-40vh) rotate(45deg); opacity:0; }
+      100% { transform:translateY(-95vh); opacity:0; }
     }
 
     /* ---------- layout ---------- */
@@ -90,12 +101,6 @@
       z-index:2;
       width:min(760px, 94vw);
       text-align:center;
-    }
-    .hint{
-      margin:0 0 16px;
-      opacity:.75;
-      font-size:14px;
-      letter-spacing:.03em;
     }
 
     .stage{
@@ -146,7 +151,6 @@
       overflow:hidden;
     }
     
-    /* inner pocket shadow (dark interior visible at top) */
     .env-base:before{
       content:"";
       position:absolute;
@@ -158,7 +162,6 @@
       clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
     }
     
-    /* inner pocket lining */
     .env-pocket{
       position:absolute;
       left:5%;
@@ -172,7 +175,6 @@
       pointer-events:none;
     }
     
-    /* paper texture overlay - more pronounced grain */
     .env-base:after{
       content:"";
       position:absolute;
@@ -183,7 +185,6 @@
       mix-blend-mode: multiply;
     }
 
-    /* diagonal fold lines from corners only */
     .env-lines{
       position:absolute; 
       inset:0;
@@ -191,7 +192,6 @@
       z-index:3;
     }
     
-    /* diagonal fold lines from corners */
     .env-lines:before{
       content:"";
       position:absolute;
@@ -201,7 +201,6 @@
         linear-gradient(45deg, transparent 49.5%, rgba(0,0,0,.15) 50%, transparent 50.5%) right bottom / 51% 51% no-repeat;
     }
 
-    /* top flap (triangle from center) */
     .flap{
       position:absolute;
       left:0; right:0; 
@@ -221,7 +220,6 @@
         0 6px 16px rgba(0,0,0,.35);
     }
 
-    /* envelope address text on front */
     .env-address{
       position:absolute;
       left:50%;
@@ -297,7 +295,6 @@
       border:2.5px solid rgba(0,0,0,.45);
     }
     
-    /* irregular wax edge with drips - more pronounced */
     .seal:before{
       content:"";
       position:absolute;
@@ -314,7 +311,6 @@
       filter: blur(1.5px);
     }
     
-    /* glossy highlight streak - more prominent */
     .seal:after{
       content:"";
       position:absolute;
@@ -328,11 +324,7 @@
       transform: rotate(-28deg);
       filter: blur(4px);
     }
-      transform: rotate(-25deg);
-      filter: blur(3px);
-    }
 
-    /* inner pocket visible when open */
     .env-pocket-open{
       position:absolute;
       left:8%;
@@ -352,7 +344,6 @@
       opacity:1;
     }
 
-    /* letter (starts fully hidden behind envelope) */
     .letter{
       position:absolute;
       left:8%;
@@ -374,7 +365,6 @@
       z-index:2;
     }
     
-    /* parchment texture with fine grain */
     .letter:before{
       content:"";
       position:absolute;
@@ -386,7 +376,6 @@
       mix-blend-mode: multiply;
     }
     
-    /* subtle age spots */
     .letter:after{
       content:"";
       position:absolute;
@@ -399,7 +388,6 @@
       pointer-events:none;
     }
 
-    /* letter interior scroll area */
     .letter-inner{
       height:100%;
       padding:28px 28px 24px;
@@ -434,7 +422,6 @@
       font-weight: 400;
     }
 
-    /* OPEN STATE: flap rotates up, seal disappears, letter rises */
     .env.is-open .flap{
       transform: rotateX(180deg);
     }
@@ -464,6 +451,7 @@
 
 <body>
   <div class="hearts" aria-hidden="true" id="hearts"></div>
+  <div class="hearts-above" aria-hidden="true" id="hearts-above"></div>
 
   <div class="wrap">
     <div class="stage">
@@ -501,21 +489,22 @@ dein Michael</p>
   </div>
 
   <script>
-    // toggle open/close
     const env = document.getElementById('env');
     const letter = env.querySelector('.letter');
     const heartsContainer = document.getElementById('hearts');
+    const heartsAboveContainer = document.getElementById('hearts-above');
 
     function setOpen(open){
       env.classList.toggle('is-open', open);
       env.setAttribute('aria-expanded', String(open));
       letter.setAttribute('aria-hidden', String(!open));
       
-      // trigger hearts animation when opening
       if(open){
         heartsContainer.classList.add('active');
+        heartsAboveContainer.classList.add('active');
       } else {
         heartsContainer.classList.remove('active');
+        heartsAboveContainer.classList.remove('active');
       }
     }
     function toggle(){ setOpen(!env.classList.contains('is-open')); }
@@ -528,23 +517,43 @@ dein Michael</p>
       }
     });
 
-    // hearts background
+    // Create hearts behind letter - more hearts
     const hearts = document.getElementById('hearts');
-    const COUNT = 85;
+    const COUNT_BEHIND = 100;
     const rand = (a,b)=>Math.random()*(b-a)+a;
 
-    for(let i=0;i<COUNT;i++){
+    for(let i=0;i<COUNT_BEHIND;i++){
       const h = document.createElement('div');
       h.className='heart';
-      const s = rand(14, 34);
+      const s = rand(20, 45);
       h.style.width = s+'px';
       h.style.height = s+'px';
-      h.style.left = rand(-15, 115)+'vw';
-      h.style.bottom = rand(-20, 0)+'vh';
+      h.style.left = rand(-10, 110)+'vw';
+      h.style.top = '105vh';
       h.style.opacity = rand(.45,.85);
-      h.style.animationDuration = rand(10, 22)+'s';
-      h.style.animationDelay = rand(0, 10)+'s';
+      const duration = rand(10, 18);
+      h.style.animationDuration = duration+'s';
+      h.style.animationDelay = rand(0, duration)+'s';
       hearts.appendChild(h);
+    }
+    
+    // Create hearts above letter - fewer hearts (25%)
+    const heartsAbove = document.getElementById('hearts-above');
+    const COUNT_ABOVE = 25;
+
+    for(let i=0;i<COUNT_ABOVE;i++){
+      const h = document.createElement('div');
+      h.className='heart';
+      const s = rand(20, 45);
+      h.style.width = s+'px';
+      h.style.height = s+'px';
+      h.style.left = rand(-10, 110)+'vw';
+      h.style.top = '105vh';
+      h.style.opacity = rand(.45,.85);
+      const duration = rand(10, 18);
+      h.style.animationDuration = duration+'s';
+      h.style.animationDelay = rand(0, duration)+'s';
+      heartsAbove.appendChild(h);
     }
   </script>
 </body>
