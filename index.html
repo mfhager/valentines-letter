@@ -11,249 +11,209 @@
 
   <style>
     :root{
-      --bg0:#08090c;
-      --bg1:#121521;
+      --bg:#06070a;
 
-      --paper:#efe4c8;
-      --paper2:#e1d2ad;
-      --ink:#161616;
+      /* beige / tan envelope */
+      --env:#d9b07a;
+      --env2:#c79b63;
+      --envLine: rgba(0,0,0,.10);
 
-      --env:#b08a55;
-      --env2:#8f6b3e;
-      --env3:#6f5434; /* inner/bottom */
+      /* paper */
+      --paper:#f3ead4;
+      --paper2:#e7d8b7;
+      --ink:#141414;
 
-      --wax:#6e1b1b;
-      --wax2:#4f1111;
+      /* wax */
+      --wax:#7b1f1f;
+      --wax2:#4c1010;
+
+      --radius: 18px;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
+      background:
+        radial-gradient(900px 520px at 50% 25%, #1a1f2b 0%, var(--bg) 70%),
+        linear-gradient(180deg, #0c0f18, var(--bg));
       display:grid;
       place-items:center;
       overflow:hidden;
-      background:
-        radial-gradient(900px 520px at 50% 25%, #1c2030 0%, var(--bg0) 70%),
-        linear-gradient(180deg, var(--bg1), var(--bg0));
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#d9dbe2;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    /* --- floating hearts background --- */
+    /* ---------- floating hearts ---------- */
     .hearts{
-      position:fixed;
-      inset:0;
+      position:fixed; inset:0;
       pointer-events:none;
-      opacity:.35;
-      filter: blur(.0px);
       z-index:0;
+      opacity:.40;
     }
     .heart{
       position:absolute;
-      width:18px;
-      height:18px;
+      width:16px; height:16px;
       transform:rotate(45deg);
-      background: rgba(120, 30, 40, .55);
+      background: rgba(190, 30, 45, .55);
       border-radius:4px;
       animation: floatUp linear infinite;
       will-change: transform, top, left, opacity;
+      filter: blur(.0px);
     }
     .heart:before,.heart:after{
       content:"";
       position:absolute;
-      width:18px;
-      height:18px;
-      background: rgba(120, 30, 40, .55);
+      width:16px; height:16px;
+      background: rgba(190, 30, 45, .55);
       border-radius:50%;
     }
-    .heart:before{ left:-9px; top:0; }
-    .heart:after{ top:-9px; left:0; }
+    .heart:before{ left:-8px; top:0; }
+    .heart:after{ left:0; top:-8px; }
 
     @keyframes floatUp{
-      0%   { transform:translateY(40px) rotate(45deg); opacity:0; }
-      10%  { opacity:.7; }
-      80%  { opacity:.7; }
+      0%   { transform:translateY(60px) rotate(45deg); opacity:0; }
+      10%  { opacity:.70; }
+      85%  { opacity:.70; }
       100% { transform:translateY(-120vh) rotate(45deg); opacity:0; }
     }
 
+    /* ---------- layout ---------- */
     .wrap{
       position:relative;
       z-index:2;
-      width:min(720px, 94vw);
+      width:min(760px, 94vw);
       text-align:center;
     }
     .hint{
-      margin:0 0 14px;
+      margin:0 0 16px;
       opacity:.75;
-      letter-spacing:.03em;
       font-size:14px;
+      letter-spacing:.03em;
     }
 
     .stage{
-      height:520px;
+      height:560px;
       display:grid;
       place-items:center;
     }
 
-    .envelope{
+    /* ---------- envelope component ---------- */
+    .env{
       position:relative;
-      width:min(520px, 92vw);
-      aspect-ratio: 520 / 340;
+      width:min(560px, 92vw);
+      aspect-ratio: 560 / 360;
       cursor:pointer;
       user-select:none;
+      outline:none;
       filter: drop-shadow(0 28px 42px rgba(0,0,0,.65));
       transform: translateZ(0);
-      outline:none;
+    }
+    .env:focus-visible{
+      outline: 3px solid rgba(255,255,255,.55);
+      outline-offset: 10px;
+      border-radius: calc(var(--radius) + 6px);
     }
 
-    /* --- envelope base --- */
-    .env-body{
-      position:absolute;
-      inset:0;
-      border-radius:18px;
-      background:
-        linear-gradient(180deg, var(--env) 0%, var(--env2) 55%, #6a4e2f 100%);
+    /* base rectangle */
+    .env-base{
+      position:absolute; inset:0;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--env), var(--env2));
       overflow:hidden;
     }
-    /* subtle paper texture */
-    .env-body:after{
+
+    /* simple fold lines (flat illustration vibe) */
+    .env-lines{
+      position:absolute; inset:0;
+      border-radius: var(--radius);
+      pointer-events:none;
+    }
+    /* bottom left fold */
+    .env-lines:before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(135deg, transparent 49.2%, var(--envLine) 50%, transparent 50.8%) left bottom / 55% 65% no-repeat,
+        linear-gradient(225deg, transparent 49.2%, var(--envLine) 50%, transparent 50.8%) right bottom / 55% 65% no-repeat;
+      opacity:.9;
+    }
+    /* top fold (closed flap line) */
+    .env-lines:after{
       content:"";
       position:absolute;
-      inset:0;
+      left:0; right:0;
+      top:0;
+      height:60%;
       background:
-        repeating-linear-gradient(
-          35deg,
-          rgba(255,255,255,.05) 0px,
-          rgba(255,255,255,.05) 2px,
-          transparent 2px,
-          transparent 7px
-        );
-      opacity:.35;
-      mix-blend-mode:overlay;
-      pointer-events:none;
+        linear-gradient(180deg, transparent 56%, var(--envLine) 57%, transparent 58%);
+      opacity:.65;
     }
 
-    /* inner pocket (only visible when open, behind letter) */
-    .pocket{
-      position:absolute;
-      left:6%;
-      right:6%;
-      bottom:7%;
-      height:62%;
-      border-radius:14px;
-      background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.35));
-      opacity:0;
-      transition: opacity 260ms ease;
-      pointer-events:none;
-    }
-
-    /* bottom flap (triangle) */
-    .flap-bottom{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height:62%;
-      border-radius:0 0 18px 18px;
-      background: linear-gradient(180deg, var(--env2), var(--env3));
-      clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
-      opacity:.98;
-    }
-
-    /* top flap (closed: covers front, open: folds up) */
-    .flap-top{
+    /* top flap (triangle) – in closed state it sits on top */
+    .flap{
       position:absolute;
       left:0; right:0; top:0;
-      height:70%;
-      border-radius:18px 18px 0 0;
-      background: linear-gradient(180deg, #caa06a, var(--env) 70%);
+      height:58%;
+      border-radius: var(--radius) var(--radius) 0 0;
+      background: linear-gradient(180deg, #e0bf91, var(--env));
       clip-path: polygon(0 0, 50% 72%, 100% 0, 100% 100%, 0 100%);
       transform-origin: top;
       transform: rotateX(0deg);
       transition: transform 520ms cubic-bezier(.18,.95,.12,1);
-      will-change: transform;
       z-index:6;
     }
-    /* the inside of the flap (brown, telltale difference on open) */
-    .flap-top:after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background: linear-gradient(180deg, #7a5a35, #4f3b24);
-      clip-path: inherit;
-      transform: translateZ(-1px);
-      opacity:0; /* becomes visible when rotated */
-      transition: opacity 220ms ease;
-    }
 
-    /* wax seal */
+    /* wax seal on the flap */
     .seal{
       position:absolute;
       left:50%;
-      top:58%;
+      top:55%;
       transform: translate(-50%, -50%);
-      width:68px;
-      height:68px;
+      width:70px; height:70px;
       border-radius:50%;
       background:
-        radial-gradient(circle at 30% 28%, rgba(255,255,255,.18), transparent 55%),
-        radial-gradient(circle at 70% 80%, rgba(0,0,0,.22), transparent 56%),
-        linear-gradient(180deg, #8c2a2a, var(--wax2));
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,.16), transparent 55%),
+        radial-gradient(circle at 75% 80%, rgba(0,0,0,.22), transparent 56%),
+        linear-gradient(180deg, var(--wax), var(--wax2));
       box-shadow:
         inset 0 3px 7px rgba(0,0,0,.45),
-        0 18px 26px rgba(0,0,0,.55);
+        0 16px 26px rgba(0,0,0,.55);
       display:grid;
       place-items:center;
-      font-family: "Cinzel", serif;
+      font-family:"Cinzel", serif;
       font-weight:800;
-      letter-spacing:.04em;
       color:#f3e6d6;
+      letter-spacing:.04em;
       z-index:7;
       transition: opacity 220ms ease, transform 220ms ease;
     }
 
-    /* --- letter (hidden in closed state) --- */
+    /* letter (starts fully hidden behind envelope) */
     .letter{
       position:absolute;
-      left:9%;
-      right:9%;
-      bottom:8%;
-      height:84%;
-      border-radius:12px;
-      background:
-        radial-gradient(circle at 18% 22%, rgba(255,255,255,.28), transparent 60%),
-        linear-gradient(180deg, var(--paper) 0%, var(--paper2) 100%);
+      left:12%;
+      right:12%;
+      bottom:10%;
+      height:78%;
+      border-radius: 14px;
+      background: linear-gradient(180deg, var(--paper), var(--paper2));
       box-shadow:
-        inset 0 0 40px rgba(0,0,0,.14),
-        0 22px 34px rgba(0,0,0,.52);
+        0 20px 32px rgba(0,0,0,.55),
+        inset 0 0 0 1px rgba(0,0,0,.08);
       overflow:hidden;
-      transform: translateY(92%); /* fully hidden when closed */
+      transform: translateY(92%);
       transition: transform 560ms cubic-bezier(.18,.95,.12,1);
       z-index:5;
     }
-    /* faint paper grain */
-    .letter:before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        repeating-linear-gradient(
-          25deg,
-          rgba(0,0,0,.03) 0px,
-          rgba(0,0,0,.03) 1px,
-          transparent 1px,
-          transparent 6px
-        );
-      opacity:.35;
-      pointer-events:none;
-    }
 
+    /* letter interior scroll area */
     .letter-inner{
-      position:relative;
       height:100%;
       padding:26px 26px 22px;
-      font-family: "EB Garamond", serif;
-      color: var(--ink);
-      overflow:auto; /* scrollable */
+      overflow:auto;
+      font-family:"EB Garamond", serif;
+      color:var(--ink);
       scrollbar-width: thin;
       scrollbar-color: rgba(0,0,0,.25) transparent;
     }
@@ -268,45 +228,32 @@
     .title{
       font-family:"Cinzel", serif;
       font-weight:800;
-      letter-spacing:.02em;
       font-size:22px;
       margin:0 0 10px;
+      letter-spacing:.02em;
     }
     .text{
+      margin:0;
       font-size:18px;
       line-height:1.6;
-      margin:0;
       white-space:pre-line;
     }
 
-    /* open state */
-    .envelope.is-open .flap-top{
+    /* OPEN STATE: flap goes up, seal disappears, letter rises and stays scrollable */
+    .env.is-open .flap{
       transform: rotateX(170deg);
     }
-    .envelope.is-open .flap-top:after{
-      opacity:1;
-    }
-    .envelope.is-open .letter{
-      transform: translateY(-8%);
-    }
-    .envelope.is-open .seal{
+    .env.is-open .seal{
       opacity:0;
       transform: translate(-50%, -50%) scale(.88);
       pointer-events:none;
     }
-    .envelope.is-open .pocket{
-      opacity:1;
+    .env.is-open .letter{
+      transform: translateY(-10%);
     }
 
-    /* accessibility focus */
-    .envelope:focus-visible{
-      outline: 3px solid rgba(255,255,255,.55);
-      outline-offset: 10px;
-      border-radius: 22px;
-    }
-
-    @media (max-width:520px){
-      .stage{ height:480px; }
+    @media (max-width:560px){
+      .stage{ height:520px; }
       .letter-inner{ padding:22px 20px 18px; }
       .text{ font-size:17px; }
     }
@@ -320,35 +267,34 @@
     <p class="hint">Klick aufs Kuvert.</p>
 
     <div class="stage">
-      <div class="envelope" id="env" role="button" tabindex="0" aria-expanded="false" aria-label="Kuvert öffnen">
-        <div class="env-body"></div>
-        <div class="pocket"></div>
-        <div class="flap-bottom"></div>
+      <div class="env" id="env" role="button" tabindex="0" aria-expanded="false" aria-label="Kuvert öffnen">
+        <div class="env-base"></div>
+        <div class="env-lines"></div>
 
         <div class="seal" aria-hidden="true">MF</div>
 
         <div class="letter" aria-hidden="true">
           <div class="letter-inner">
             <h2 class="title">Fiona,</h2>
-            <p class="text">ich bin von ganzem Herzen froh, dass du in mein Leben getreten bist. Du bist ein wundervoller Mensch, mit spannenden Höhen und auch Tiefen. Ich liebe es, mit dir über alles reden zu können, das schätze ich sehr.
+            <p class="text">ich bin von ganzem Herzen froh, dass du in mein Leben getreten bist. Du bist cool, inspirierend, und voller positiver Energie, kurz: Du bist ein wundervoller Mensch, mit spannenden Höhen und auch Tiefen. Ich liebe es, mit dir über alles reden zu können, das schätze ich sehr.
 
-Und dann sie ensures you also noch phänomenal aus und der Sex mit dir ist unglaublich heiss, und dabei haben wir erst begonnen, uns so richtig kennenzulernen: erotisch, aber auch romantisch.
+Und dann siehst du auch noch phänomenal aus und der Sex mit dir ist unglaublich heiß, und dabei haben wir erst begonnen, uns so richtig kennenzulernen: erotisch, aber auch romantisch.
 
 Ich hoffe, dass wir einander noch lange in unseren Leben haben werden, vielleicht wird ja sogar ein gemeinsames daraus.
 
-Bleib so wie du bist, du bist wunderbar. Ich vermisse deine physische Gegenwart schon und freue mich jetzt schon, wenn wir uns wiedersehen.
+Bleib so wie du bist, du bist wunderbar. Ich vermisse deine physische Gegenwart und freue mich jetzt schon, wenn wir uns wiedersehen.
 
 Dein Michael</p>
           </div>
         </div>
 
-        <div class="flap-top"></div>
+        <div class="flap"></div>
       </div>
     </div>
   </div>
 
   <script>
-    // Toggle open/close
+    // toggle open/close
     const env = document.getElementById('env');
     const letter = env.querySelector('.letter');
 
@@ -357,10 +303,7 @@ Dein Michael</p>
       env.setAttribute('aria-expanded', String(open));
       letter.setAttribute('aria-hidden', String(!open));
     }
-
-    function toggle(){
-      setOpen(!env.classList.contains('is-open'));
-    }
+    function toggle(){ setOpen(!env.classList.contains('is-open')); }
 
     env.addEventListener('click', toggle);
     env.addEventListener('keydown', (e) => {
@@ -370,23 +313,22 @@ Dein Michael</p>
       }
     });
 
-    // Hearts generator (only hearts, no other sprites)
+    // hearts background
     const hearts = document.getElementById('hearts');
     const COUNT = 26;
-
-    function rand(min, max){ return Math.random() * (max - min) + min; }
+    const rand = (a,b)=>Math.random()*(b-a)+a;
 
     for(let i=0;i<COUNT;i++){
       const h = document.createElement('div');
-      h.className = 'heart';
-      const size = rand(10, 26);
-      h.style.width = size + 'px';
-      h.style.height = size + 'px';
-      h.style.left = rand(-5, 105) + 'vw';
-      h.style.top = rand(20, 120) + 'vh';
-      h.style.opacity = rand(.18, .55);
-      h.style.animationDuration = rand(10, 22) + 's';
-      h.style.animationDelay = rand(0, 10) + 's';
+      h.className='heart';
+      const s = rand(10, 26);
+      h.style.width = s+'px';
+      h.style.height = s+'px';
+      h.style.left = rand(-5, 105)+'vw';
+      h.style.top  = rand(20, 120)+'vh';
+      h.style.opacity = rand(.18,.55);
+      h.style.animationDuration = rand(10, 22)+'s';
+      h.style.animationDelay = rand(0, 10)+'s';
       hearts.appendChild(h);
     }
   </script>
