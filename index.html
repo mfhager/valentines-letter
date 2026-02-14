@@ -1,266 +1,266 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Brief für Fiona</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brief für Fiona</title>
 
-  <!-- Optional: stylised “latin” display fonts (free via Google Fonts) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#0f1115;
-      --paper:#f4f1e8;
-      --ink:#141a24;
-      --env:#d9b27c;
-      --env2:#c49a63;
-      --env3:#b88b55;
-      --accent:#7a1d1d;
-    }
+<style>
 
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      background:radial-gradient(900px 500px at 50% 35%,#1c2230,var(--bg));
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    }
+:root{
+ --bg:#0b0c0f;
+ --paper:#efe4c8;
+ --paper-dark:#e1d2ad;
+ --ink:#1a1a1a;
+ --wax:#6e1b1b;
+ --env:#9c7a4d;
+ --env-dark:#6f5434;
+}
 
-    .wrap{
-      width:min(560px,92vw);
-      text-align:center;
-      color:#e9eef8;
-    }
+body{
+ margin:0;
+ min-height:100vh;
+ display:grid;
+ place-items:center;
+ background: radial-gradient(circle at 50% 30%, #1a1d24 0%, #0b0c0f 70%);
+ font-family:"EB Garamond", serif;
+}
 
-    .hint{
-      opacity:.85;
-      font-size:14px;
-      margin:0 0 14px;
-      letter-spacing:.02em;
-    }
+.wrap{
+ width:min(620px,94vw);
+ text-align:center;
+ color:#eee;
+}
 
-    .stage{
-      height:360px;
-      display:grid;
-      place-items:center;
-    }
+.hint{
+ opacity:.7;
+ font-size:14px;
+ margin-bottom:12px;
+ letter-spacing:.05em;
+}
 
-    .envelope{
-      position:relative;
-      width:380px;
-      height:250px;
-      cursor:pointer;
-      user-select:none;
-      filter:drop-shadow(0 22px 28px rgba(0,0,0,.35));
-    }
+.stage{
+ height:380px;
+ display:grid;
+ place-items:center;
+}
 
-    @media (max-width:440px){
-      .envelope{width:310px;height:205px}
-      .stage{height:330px}
-    }
+.envelope{
+ position:relative;
+ width:420px;
+ height:270px;
+ cursor:pointer;
+ filter:drop-shadow(0 25px 35px rgba(0,0,0,.6));
+}
 
-    .env-body{
-      position:absolute;
-      inset:0;
-      border-radius:18px;
-      background:linear-gradient(180deg,var(--env),var(--env2));
-      overflow:hidden;
-    }
+.env-body{
+ position:absolute;
+ inset:0;
+ border-radius:14px;
+ background:
+ linear-gradient(160deg,var(--env),var(--env-dark)),
+ repeating-linear-gradient(
+  45deg,
+  rgba(0,0,0,.06) 0px,
+  rgba(0,0,0,.06) 2px,
+  transparent 2px,
+  transparent 6px
+ );
+}
 
-    .flap-left,.flap-right{
-      position:absolute;
-      top:28%;
-      width:60%;
-      height:80%;
-      background:linear-gradient(180deg,var(--env2),var(--env3));
-      opacity:.985;
-    }
-    .flap-left{
-      left:-10%;
-      clip-path:polygon(0 0,100% 50%,0 100%);
-    }
-    .flap-right{
-      right:-10%;
-      clip-path:polygon(100% 0,0 50%,100% 100%);
-    }
+.flap-top{
+ position:absolute;
+ left:0; right:0; top:0;
+ height:66%;
+ background:linear-gradient(180deg,#b69260,var(--env));
+ clip-path:polygon(0 0,50% 70%,100% 0,100% 100%,0 100%);
+ transform-origin:top;
+ transition:.4s cubic-bezier(.2,.85,.2,1);
+ border-radius:14px 14px 0 0;
+}
 
-    .flap-bottom{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height:62%;
-      background:linear-gradient(180deg,var(--env2),var(--env3));
-      clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%);
-      border-bottom-left-radius:18px;
-      border-bottom-right-radius:18px;
-    }
+.flap-bottom{
+ position:absolute;
+ left:0; right:0; bottom:0;
+ height:62%;
+ background:linear-gradient(180deg,var(--env),var(--env-dark));
+ clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);
+}
 
-    .flap-top{
-      position:absolute;
-      left:0; right:0; top:0;
-      height:66%;
-      background:linear-gradient(180deg,#e2c08c,var(--env2));
-      clip-path:polygon(0 0,50% 70%,100% 0,100% 100%,0 100%);
-      transform-origin:top;
-      transform:rotateX(0deg);
-      transition:transform 320ms cubic-bezier(.2,.85,.15,1);
-      border-top-left-radius:18px;
-      border-top-right-radius:18px;
-      will-change:transform;
-    }
+.seal{
+ position:absolute;
+ left:50%;
+ top:58%;
+ transform:translate(-50%,-50%);
+ width:64px;
+ height:64px;
+ border-radius:50%;
+ background:
+ radial-gradient(circle at 35% 30%, rgba(255,255,255,.2), transparent 60%),
+ linear-gradient(180deg,#8c2a2a,var(--wax));
+ box-shadow:
+ inset 0 3px 6px rgba(0,0,0,.4),
+ 0 8px 18px rgba(0,0,0,.6);
+ display:grid;
+ place-items:center;
+ color:#f5e6d0;
+ font-family:Cinzel, serif;
+ font-weight:700;
+}
 
-    .seal{
-      position:absolute;
-      left:50%;
-      top:58%;
-      transform:translate(-50%,-50%);
-      width:56px;
-      height:56px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), rgba(0,0,0,0) 55%),
-                 radial-gradient(circle at 70% 80%, rgba(0,0,0,.18), rgba(0,0,0,0) 55%),
-                 linear-gradient(180deg, #8a2323, #5c1414);
-      box-shadow:0 10px 14px rgba(0,0,0,.25);
-      display:grid;
-      place-items:center;
-      color:#f3e6d6;
-      font-family:"Cinzel Decorative","Cinzel",serif;
-      font-weight:900;
-      letter-spacing:.04em;
-      z-index:4;
-    }
+.letter{
+ position:absolute;
+ left:7%;
+ right:7%;
+ bottom:8%;
+ height:90%;
+ border-radius:6px;
+ background:
+ radial-gradient(circle at 20% 30%, rgba(255,255,255,.3), transparent 60%),
+ linear-gradient(var(--paper),var(--paper-dark));
+ box-shadow:
+ inset 0 0 40px rgba(0,0,0,.15),
+ 0 20px 35px rgba(0,0,0,.5);
+ transform:translateY(60%);
+ transition:.45s cubic-bezier(.2,.9,.1,1);
+ display:flex;
+ flex-direction:column;
+ overflow:hidden;
+}
 
-    .letter{
-      position:absolute;
-      left:8%;
-      right:8%;
-      bottom:10%;
-      height:88%;
-      background:var(--paper);
-      border-radius:14px;
-      transform:translateY(56%);
-      transition:transform 360ms cubic-bezier(.2,.9,.1,1);
-      box-shadow:0 12px 18px rgba(0,0,0,.18);
-      display:flex;
-      flex-direction:column;
-      overflow:hidden;
-      z-index:3;
-    }
+.letter::before{
+ content:"";
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ background:
+ radial-gradient(circle at 50% 50%, transparent 65%, rgba(0,0,0,.25));
+ mix-blend-mode:multiply;
+}
 
-    .letter header{
-      padding:14px 16px 10px;
-      background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,0));
-      color:var(--ink);
-      font-family:"Cinzel",serif;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      text-align:left;
-      font-size:13px;
-    }
+header{
+ font-family:Cinzel, serif;
+ padding:18px 20px 6px;
+ font-size:13px;
+ letter-spacing:.12em;
+ text-transform:uppercase;
+ opacity:.75;
+}
 
-    .content{
-      padding:0 16px 16px;
-      color:var(--ink);
-      text-align:left;
-      line-height:1.42;
-      font-size:15px;
-      opacity:0;
-      transform:translateY(6px);
-      transition:opacity 200ms ease,transform 200ms ease;
-    }
+.content{
+ padding:0 22px 18px;
+ font-size:17px;
+ line-height:1.55;
+ color:var(--ink);
+ opacity:0;
+ transform:translateY(10px);
+ transition:.3s ease;
+}
 
-    .latin{
-      margin:10px 0 6px;
-      font-family:"Cinzel Decorative","Cinzel",serif;
-      font-weight:900;
-      letter-spacing:.02em;
-      font-size:30px;
-      line-height:1.05;
-      color:var(--accent);
-      text-shadow:0 1px 0 rgba(0,0,0,.10);
-    }
+.main-text{
+ font-family:"EB Garamond", serif;
+ font-size:20px;
+}
 
-    .sub{
-      margin:8px 0 0;
-      font-family:"Cinzel",serif;
-      font-weight:600;
-      letter-spacing:.01em;
-      opacity:.9;
-    }
+.sig{
+ margin-top:auto;
+ padding:10px 22px 20px;
+ font-family:Cinzel, serif;
+ font-size:14px;
+ opacity:.8;
+}
 
-    .sig{
-      margin-top:auto;
-      padding:10px 16px 16px;
-      color:rgba(20,26,36,.78);
-      font-size:13px;
-      font-family:"Cinzel",serif;
-      letter-spacing:.02em;
-    }
+.envelope.is-open .flap-top{ transform:rotateX(170deg); }
+.envelope.is-open .letter{ transform:translateY(-12%); }
+.envelope.is-open .content{
+ opacity:1;
+ transform:translateY(0);
+ transition-delay:.15s;
+}
+.envelope.is-open .seal{
+ opacity:0;
+ transform:translate(-50%,-50%) scale(.8);
+ transition:.2s;
+}
 
-    .envelope.is-open .flap-top{ transform:rotateX(165deg); }
-    .envelope.is-open .letter{ transform:translateY(-10%); }
-    .envelope.is-open .content{
-      opacity:1;
-      transform:translateY(0);
-      transition-delay:140ms;
-    }
-    .envelope.is-open .seal{ opacity:.0; transform:translate(-50%,-50%) scale(.92); transition:opacity 160ms ease, transform 160ms ease; }
-
-    .envelope:focus-visible{
-      outline:3px solid rgba(255,255,255,.65);
-      outline-offset:6px;
-      border-radius:22px;
-    }
-  </style>
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <p class="hint">Klick aufs Kuvert.</p>
 
-    <div class="stage">
-      <div class="envelope" id="env" role="button" tabindex="0" aria-expanded="false" aria-label="Kuvert öffnen">
-        <div class="letter" aria-hidden="true">
-          <header>Nachricht</header>
+<div class="wrap">
+<p class="hint">Klick aufs Kuvert.</p>
 
-          <div class="content" id="msg">
-            <p class="latin">Fiona, ich hab dich lieb.</p>
-            <p class="sub">Kein grosses Drama. Einfach ehrlich.</p>
-          </div>
+<div class="stage">
+<div class="envelope" id="env" tabindex="0">
 
-          <div class="sig">– Michael</div>
-        </div>
+<div class="letter">
 
-        <div class="env-body"></div>
-        <div class="flap-left"></div>
-        <div class="flap-right"></div>
-        <div class="flap-bottom"></div>
-        <div class="seal" aria-hidden="true">MF</div>
-        <div class="flap-top"></div>
-      </div>
-    </div>
-  </div>
+<header>Persönlich</header>
 
-  <script>
-    const env = document.getElementById('env');
+<div class="content">
 
-    function toggleEnvelope(){
-      const open = env.classList.toggle('is-open');
-      env.setAttribute('aria-expanded', String(open));
-      env.querySelector('.letter').setAttribute('aria-hidden', String(!open));
-    }
+<p class="main-text">
+Fiona,<br><br>
 
-    env.addEventListener('click', toggleEnvelope);
-    env.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        toggleEnvelope();
-      }
-    });
-  </script>
+ich bin von ganzem Herzen froh, dass du in mein Leben getreten bist.  
+Du bist ein wundervoller Mensch, mit spannenden Höhen und auch Tiefen.  
+
+Ich liebe es, mit dir über alles reden zu können. Das schätze ich sehr.  
+
+Und dann siehst du auch noch phänomenal aus.  
+Und die Nähe mit dir ist unglaublich intensiv –  
+und dabei haben wir erst begonnen, uns so richtig kennenzulernen.  
+Erotisch, aber auch romantisch.  
+
+<br><br>
+
+Ich hoffe, dass wir einander noch lange in unseren Leben haben werden.  
+Vielleicht wird ja sogar ein gemeinsames daraus.  
+
+Bleib so wie du bist. Du bist wunderbar.  
+
+Ich vermisse deine physische Gegenwart  
+und freue mich jetzt schon, wenn wir uns wiedersehen.  
+
+<br><br>
+
+Dein Michael
+</p>
+
+</div>
+
+<div class="sig">– Michael</div>
+
+</div>
+
+<div class="env-body"></div>
+<div class="flap-bottom"></div>
+<div class="seal">MF</div>
+<div class="flap-top"></div>
+
+</div>
+</div>
+</div>
+
+<script>
+const env = document.getElementById('env');
+
+function toggle(){
+ const open = env.classList.toggle('is-open');
+ env.setAttribute('aria-expanded', open);
+}
+
+env.addEventListener('click', toggle);
+env.addEventListener('keydown', e=>{
+ if(e.key==="Enter" || e.key===" "){
+  e.preventDefault();
+  toggle();
+ }
+});
+</script>
+
 </body>
 </html>
