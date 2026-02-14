@@ -13,21 +13,23 @@
     :root{
       --bg:#06070a;
 
-      /* beige / tan envelope */
-      --env:#d9b07a;
-      --env2:#c79b63;
-      --envLine: rgba(0,0,0,.10);
+      /* vintage beige envelope tones from reference */
+      --env:#d8b892;
+      --env2:#c4a575;
+      --envFlap:#e8c9a3;
+      --envShadow:#8b7352;
+      --envLine: rgba(0,0,0,.12);
 
-      /* paper */
-      --paper:#f3ead4;
-      --paper2:#e7d8b7;
-      --ink:#141414;
+      /* aged paper */
+      --paper:#f8f3eb;
+      --paper2:#e8ddc5;
+      --ink:#2a2520;
 
-      /* wax */
-      --wax:#7b1f1f;
-      --wax2:#4c1010;
+      /* deep red wax */
+      --wax:#a83232;
+      --wax2:#6a1515;
 
-      --radius: 18px;
+      --radius: 8px;
     }
 
     *{ box-sizing:border-box; }
@@ -48,14 +50,18 @@
     .hearts{
       position:fixed; inset:0;
       pointer-events:none;
-      z-index:0;
-      opacity:.40;
+      z-index:100;
+      opacity:0;
+      transition: opacity 800ms ease 400ms;
+    }
+    .hearts.active{
+      opacity:.45;
     }
     .heart{
       position:absolute;
       width:16px; height:16px;
       transform:rotate(45deg);
-      background: rgba(190, 30, 45, .55);
+      background: rgba(235, 65, 80, .80);
       border-radius:4px;
       animation: floatUp linear infinite;
       will-change: transform, top, left, opacity;
@@ -65,17 +71,17 @@
       content:"";
       position:absolute;
       width:16px; height:16px;
-      background: rgba(190, 30, 45, .55);
+      background: rgba(235, 65, 80, .80);
       border-radius:50%;
     }
     .heart:before{ left:-8px; top:0; }
     .heart:after{ left:0; top:-8px; }
 
     @keyframes floatUp{
-      0%   { transform:translateY(60px) rotate(45deg); opacity:0; }
-      10%  { opacity:.70; }
-      85%  { opacity:.70; }
-      100% { transform:translateY(-120vh) rotate(45deg); opacity:0; }
+      0%   { transform:translateY(120vh) rotate(45deg); opacity:0; }
+      8%   { opacity:.70; }
+      88%  { opacity:.70; }
+      100% { transform:translateY(-40vh) rotate(45deg); opacity:0; }
     }
 
     /* ---------- layout ---------- */
@@ -106,8 +112,16 @@
       cursor:pointer;
       user-select:none;
       outline:none;
-      filter: drop-shadow(0 28px 42px rgba(0,0,0,.65));
+      filter: drop-shadow(0 32px 48px rgba(0,0,0,.75));
       transform: translateZ(0);
+    }
+    .env:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius: calc(var(--radius) + 2px);
+      background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.4));
+      z-index:-1;
     }
     .env:focus-visible{
       outline: 3px solid rgba(255,255,255,.55);
@@ -117,100 +131,278 @@
 
     /* base rectangle */
     .env-base{
-      position:absolute; inset:0;
+      position:absolute; 
+      inset:0;
       border-radius: var(--radius);
-      background: linear-gradient(180deg, var(--env), var(--env2));
+      background: 
+        linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 35%),
+        linear-gradient(225deg, rgba(0,0,0,.12) 0%, transparent 30%),
+        linear-gradient(180deg, var(--env), var(--env2));
+      box-shadow:
+        inset 0 2px 6px rgba(255,255,255,.3),
+        inset 0 -4px 10px rgba(0,0,0,.2),
+        inset 3px 0 8px rgba(0,0,0,.1),
+        inset -3px 0 8px rgba(0,0,0,.1);
       overflow:hidden;
     }
-
-    /* simple fold lines (flat illustration vibe) */
-    .env-lines{
-      position:absolute; inset:0;
-      border-radius: var(--radius);
-      pointer-events:none;
-    }
-    /* bottom left fold */
-    .env-lines:before{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        linear-gradient(135deg, transparent 49.2%, var(--envLine) 50%, transparent 50.8%) left bottom / 55% 65% no-repeat,
-        linear-gradient(225deg, transparent 49.2%, var(--envLine) 50%, transparent 50.8%) right bottom / 55% 65% no-repeat;
-      opacity:.9;
-    }
-    /* top fold (closed flap line) */
-    .env-lines:after{
+    
+    /* inner pocket shadow (dark interior visible at top) */
+    .env-base:before{
       content:"";
       position:absolute;
       left:0; right:0;
       top:0;
-      height:60%;
-      background:
-        linear-gradient(180deg, transparent 56%, var(--envLine) 57%, transparent 58%);
-      opacity:.65;
+      height:52%;
+      background: 
+        linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.35) 25%, rgba(0,0,0,.18) 50%, transparent 100%);
+      clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+    }
+    
+    /* inner pocket lining */
+    .env-pocket{
+      position:absolute;
+      left:5%;
+      right:5%;
+      top:5%;
+      height:45%;
+      background: 
+        linear-gradient(180deg, rgba(139,115,82,.15) 0%, rgba(139,115,82,.08) 50%, transparent 100%);
+      clip-path: polygon(0 0, 100% 0, 93% 100%, 7% 100%);
+      z-index:1;
+      pointer-events:none;
+    }
+    
+    /* paper texture overlay - more pronounced grain */
+    .env-base:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: 
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+      opacity:.25;
+      mix-blend-mode: multiply;
     }
 
-    /* top flap (triangle) – in closed state it sits on top */
+    /* diagonal fold lines from corners only */
+    .env-lines{
+      position:absolute; 
+      inset:0;
+      pointer-events:none;
+      z-index:3;
+    }
+    
+    /* diagonal fold lines from corners */
+    .env-lines:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(135deg, transparent 49.5%, rgba(0,0,0,.15) 50%, transparent 50.5%) left bottom / 51% 51% no-repeat,
+        linear-gradient(45deg, transparent 49.5%, rgba(0,0,0,.15) 50%, transparent 50.5%) right bottom / 51% 51% no-repeat;
+    }
+
+    /* top flap (triangle from center) */
     .flap{
       position:absolute;
-      left:0; right:0; top:0;
-      height:58%;
-      border-radius: var(--radius) var(--radius) 0 0;
-      background: linear-gradient(180deg, #e0bf91, var(--env));
-      clip-path: polygon(0 0, 50% 72%, 100% 0, 100% 100%, 0 100%);
-      transform-origin: top;
+      left:0; right:0; 
+      top:0;
+      height:50%;
+      background: 
+        linear-gradient(180deg, rgba(255,255,255,.18) 0%, transparent 25%, rgba(0,0,0,.08) 100%),
+        linear-gradient(180deg, #e8c9a3, #d4ae7e);
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      transform-origin: 50% 0%;
       transform: rotateX(0deg);
       transition: transform 520ms cubic-bezier(.18,.95,.12,1);
-      z-index:6;
+      z-index:4;
+      border-radius: var(--radius) var(--radius) 0 0;
+      box-shadow: 
+        inset 0 4px 10px rgba(255,255,255,.25),
+        0 6px 16px rgba(0,0,0,.35);
     }
 
-    /* wax seal on the flap */
+    /* envelope address text on front */
+    .env-address{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%, -50%);
+      font-family:"EB Garamond", serif;
+      font-size:17px;
+      font-style: normal;
+      color:rgba(42,37,32,.60);
+      text-align:center;
+      z-index:6;
+      pointer-events:none;
+      transition: opacity 300ms ease;
+      width:100%;
+    }
+    .env-address .top{
+      position:absolute;
+      left:50%;
+      top:-115px;
+      transform: translateX(-50%);
+      font-size:15px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      display:block;
+      color:rgba(42,37,32,.60);
+      font-family:"EB Garamond", serif;
+      font-style: normal;
+    }
+    .env-address .name{
+      position:absolute;
+      left:50%;
+      top:120px;
+      transform: translateX(-50%);
+      font-size:15px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      display:block;
+      white-space:nowrap;
+      color:rgba(42,37,32,.60);
+      font-family:"EB Garamond", serif;
+      font-style: normal;
+    }
     .seal{
       position:absolute;
       left:50%;
-      top:55%;
+      top:50%;
       transform: translate(-50%, -50%);
-      width:70px; height:70px;
+      width:85px; height:85px;
       border-radius:50%;
       background:
-        radial-gradient(circle at 30% 28%, rgba(255,255,255,.16), transparent 55%),
-        radial-gradient(circle at 75% 80%, rgba(0,0,0,.22), transparent 56%),
-        linear-gradient(180deg, var(--wax), var(--wax2));
+        radial-gradient(circle at 32% 25%, rgba(255,255,255,.4), transparent 42%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.1) 25%, transparent 60%),
+        radial-gradient(circle at 68% 72%, rgba(0,0,0,.5), transparent 48%),
+        radial-gradient(ellipse at 50% 50%, #b83838 0%, #9a2828 40%, #6a1515 100%);
       box-shadow:
-        inset 0 3px 7px rgba(0,0,0,.45),
-        0 16px 26px rgba(0,0,0,.55);
+        inset 0 8px 16px rgba(0,0,0,.65),
+        inset 0 -4px 12px rgba(255,255,255,.12),
+        inset -4px 4px 14px rgba(0,0,0,.45),
+        0 12px 28px rgba(0,0,0,.75),
+        0 4px 10px rgba(0,0,0,.55);
       display:grid;
       place-items:center;
-      font-family:"Cinzel", serif;
-      font-weight:800;
-      color:#f3e6d6;
-      letter-spacing:.04em;
-      z-index:7;
+      font-family:"EB Garamond", serif;
+      font-weight:400;
+      font-size:23px;
+      color:#3a0a0a;
+      letter-spacing:.15em;
+      text-shadow: 
+        0 2px 3px rgba(0,0,0,.5),
+        0 1px 2px rgba(0,0,0,.3);
+      z-index:5;
       transition: opacity 220ms ease, transform 220ms ease;
+      border:2.5px solid rgba(0,0,0,.45);
+    }
+    
+    /* irregular wax edge with drips - more pronounced */
+    .seal:before{
+      content:"";
+      position:absolute;
+      inset:-6px;
+      border-radius:50%;
+      background: 
+        radial-gradient(circle at 12% 78%, rgba(150,40,40,.9) 0%, transparent 24%),
+        radial-gradient(circle at 85% 15%, rgba(150,40,40,.85) 0%, transparent 28%),
+        radial-gradient(circle at 70% 90%, rgba(150,40,40,.88) 0%, transparent 26%),
+        radial-gradient(circle at 22% 8%, rgba(150,40,40,.8) 0%, transparent 30%),
+        radial-gradient(circle at 90% 65%, rgba(150,40,40,.85) 0%, transparent 22%),
+        radial-gradient(circle at 50% 5%, rgba(150,40,40,.75) 0%, transparent 20%);
+      z-index:-1;
+      filter: blur(1.5px);
+    }
+    
+    /* glossy highlight streak - more prominent */
+    .seal:after{
+      content:"";
+      position:absolute;
+      left:18%;
+      top:15%;
+      width:42%;
+      height:42%;
+      background: 
+        radial-gradient(ellipse at 35% 35%, rgba(255,255,255,.45), rgba(255,255,255,.2) 48%, transparent 72%);
+      border-radius:50%;
+      transform: rotate(-28deg);
+      filter: blur(4px);
+    }
+      transform: rotate(-25deg);
+      filter: blur(3px);
+    }
+
+    /* inner pocket visible when open */
+    .env-pocket-open{
+      position:absolute;
+      left:8%;
+      right:8%;
+      top:0;
+      height:48%;
+      background: 
+        linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.25) 30%, rgba(0,0,0,.12) 60%, transparent 100%);
+      clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+      z-index:1;
+      pointer-events:none;
+      opacity:0;
+      transition: opacity 400ms ease 200ms;
+    }
+    
+    .env.is-open .env-pocket-open{
+      opacity:1;
     }
 
     /* letter (starts fully hidden behind envelope) */
     .letter{
       position:absolute;
-      left:12%;
-      right:12%;
-      bottom:10%;
-      height:78%;
-      border-radius: 14px;
-      background: linear-gradient(180deg, var(--paper), var(--paper2));
+      left:8%;
+      right:8%;
+      bottom:8%;
+      height:80%;
+      border-radius: 4px;
+      background: 
+        linear-gradient(135deg, rgba(139,115,82,.03) 0%, transparent 40%),
+        linear-gradient(180deg, #f9f6f0 0%, #f4ede0 50%, #ede3cf 100%);
       box-shadow:
-        0 20px 32px rgba(0,0,0,.55),
-        inset 0 0 0 1px rgba(0,0,0,.08);
+        0 26px 40px rgba(0,0,0,.65),
+        0 10px 20px rgba(0,0,0,.45),
+        inset 0 0 0 1px rgba(200,180,150,.15);
       overflow:hidden;
-      transform: translateY(92%);
-      transition: transform 560ms cubic-bezier(.18,.95,.12,1);
-      z-index:5;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform 560ms cubic-bezier(.18,.95,.12,1), opacity 300ms ease;
+      z-index:2;
+    }
+    
+    /* parchment texture with fine grain */
+    .letter:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: 
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.25'/%3E%3C/svg%3E");
+      opacity:.15;
+      pointer-events:none;
+      mix-blend-mode: multiply;
+    }
+    
+    /* subtle age spots */
+    .letter:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: 
+        radial-gradient(ellipse at 20% 15%, rgba(139,115,82,.04) 0%, transparent 8%),
+        radial-gradient(ellipse at 85% 25%, rgba(139,115,82,.05) 0%, transparent 10%),
+        radial-gradient(ellipse at 65% 80%, rgba(139,115,82,.04) 0%, transparent 9%),
+        radial-gradient(ellipse at 15% 70%, rgba(139,115,82,.03) 0%, transparent 7%);
+      pointer-events:none;
     }
 
     /* letter interior scroll area */
     .letter-inner{
       height:100%;
-      padding:26px 26px 22px;
+      padding:28px 28px 24px;
       overflow:auto;
       font-family:"EB Garamond", serif;
       color:var(--ink);
@@ -226,22 +418,25 @@
     }
 
     .title{
-      font-family:"Cinzel", serif;
-      font-weight:800;
-      font-size:22px;
-      margin:0 0 10px;
+      font-family:"EB Garamond", serif;
+      font-weight:400;
+      font-size:18px;
+      margin:0 0 8px;
       letter-spacing:.02em;
+      font-style: italic;
     }
     .text{
       margin:0;
       font-size:18px;
-      line-height:1.6;
+      line-height:1.7;
       white-space:pre-line;
+      font-style: italic;
+      font-weight: 400;
     }
 
-    /* OPEN STATE: flap goes up, seal disappears, letter rises and stays scrollable */
+    /* OPEN STATE: flap rotates up, seal disappears, letter rises */
     .env.is-open .flap{
-      transform: rotateX(170deg);
+      transform: rotateX(180deg);
     }
     .env.is-open .seal{
       opacity:0;
@@ -249,7 +444,14 @@
       pointer-events:none;
     }
     .env.is-open .letter{
-      transform: translateY(-10%);
+      transform: translateY(0%);
+      opacity: 1;
+    }
+    .env.is-open .env-lines{
+      opacity: 0;
+    }
+    .env.is-open .env-address{
+      opacity: 0;
     }
 
     @media (max-width:560px){
@@ -264,31 +466,36 @@
   <div class="hearts" aria-hidden="true" id="hearts"></div>
 
   <div class="wrap">
-    <p class="hint">Klick aufs Kuvert.</p>
-
     <div class="stage">
       <div class="env" id="env" role="button" tabindex="0" aria-expanded="false" aria-label="Kuvert öffnen">
         <div class="env-base"></div>
-        <div class="env-lines"></div>
-
-        <div class="seal" aria-hidden="true">MF</div>
-
+        <div class="env-pocket"></div>
+        <div class="env-pocket-open"></div>
+        
+        <div class="env-address" aria-hidden="true">
+          <span class="top">Persönlich</span>
+          <span class="name">Fiona Fio Sternchen Gheri</span>
+        </div>
+        
         <div class="letter" aria-hidden="true">
           <div class="letter-inner">
             <h2 class="title">Fiona,</h2>
-            <p class="text">ich bin von ganzem Herzen froh, dass du in mein Leben getreten bist. Du bist cool, inspirierend, und voller positiver Energie, kurz: Du bist ein wundervoller Mensch, mit spannenden Höhen und auch Tiefen. Ich liebe es, mit dir über alles reden zu können, das schätze ich sehr.
+            <p class="text">ich bin unglaublich froh, dass du in mein Leben getreten bist. Du bist intelligent, cool, inspirierend und voller positiver Energie – ein wundervoller Mensch mit all deinen spannenden Facetten. Dass ich mit dir über alles sprechen kann, ist etwas ganz Besonderes für mich. Es ist fast so, als wären wir Seelenverwandte mit demselben Sinn für Romantik.
 
-Und dann siehst du auch noch phänomenal aus und der Sex mit dir ist unglaublich heiß, und dabei haben wir erst begonnen, uns so richtig kennenzulernen: erotisch, aber auch romantisch.
+Dass du auch noch phänomenal aussiehst und wir diese unglaubliche physische Chemie haben, macht es nur noch besser. Und das, obwohl wir erst am Anfang stehen, uns wirklich kennenzulernen – romantisch und erotisch.
 
-Ich hoffe, dass wir einander noch lange in unseren Leben haben werden, vielleicht wird ja sogar ein gemeinsames daraus.
+Bleib nicht einfach wie du bist. Du bist zwar toll, aber ich freue mich jetzt schon darauf, dich über dich selbst hinauswachsen zu sehen.
 
-Bleib so wie du bist, du bist wunderbar. Ich vermisse deine physische Gegenwart und freue mich jetzt schon, wenn wir uns wiedersehen.
+Ich vermisse deine Gegenwart und freue mich auf den Moment, in dem ich dich wiedersehe.
 
-Dein Michael</p>
+101 Küsse,
+dein Michael</p>
           </div>
         </div>
 
+        <div class="env-lines"></div>
         <div class="flap"></div>
+        <div class="seal" aria-hidden="true">MF</div>
       </div>
     </div>
   </div>
@@ -297,11 +504,19 @@ Dein Michael</p>
     // toggle open/close
     const env = document.getElementById('env');
     const letter = env.querySelector('.letter');
+    const heartsContainer = document.getElementById('hearts');
 
     function setOpen(open){
       env.classList.toggle('is-open', open);
       env.setAttribute('aria-expanded', String(open));
       letter.setAttribute('aria-hidden', String(!open));
+      
+      // trigger hearts animation when opening
+      if(open){
+        heartsContainer.classList.add('active');
+      } else {
+        heartsContainer.classList.remove('active');
+      }
     }
     function toggle(){ setOpen(!env.classList.contains('is-open')); }
 
@@ -315,18 +530,18 @@ Dein Michael</p>
 
     // hearts background
     const hearts = document.getElementById('hearts');
-    const COUNT = 26;
+    const COUNT = 85;
     const rand = (a,b)=>Math.random()*(b-a)+a;
 
     for(let i=0;i<COUNT;i++){
       const h = document.createElement('div');
       h.className='heart';
-      const s = rand(10, 26);
+      const s = rand(14, 34);
       h.style.width = s+'px';
       h.style.height = s+'px';
-      h.style.left = rand(-5, 105)+'vw';
-      h.style.top  = rand(20, 120)+'vh';
-      h.style.opacity = rand(.18,.55);
+      h.style.left = rand(-15, 115)+'vw';
+      h.style.bottom = rand(-20, 0)+'vh';
+      h.style.opacity = rand(.45,.85);
       h.style.animationDuration = rand(10, 22)+'s';
       h.style.animationDelay = rand(0, 10)+'s';
       hearts.appendChild(h);
